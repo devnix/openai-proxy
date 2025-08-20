@@ -1,7 +1,8 @@
 {
     "name": "devnix/openai-proxy",
     "description": "An HTTP proxy for OpenAI-like services",
-    "type": "project",
+    "type": "library",
+    "bin": "bin/openai-proxy",
     "require": {
         "amphp/http-server": "^3.4",
         "amphp/http-client": "^5.3",
