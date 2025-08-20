@@ -1,0 +1,33 @@
+{
+    "name": "devnix/openai-proxy",
+    "description": "An HTTP proxy for OpenAI-like services",
+    "type": "project",
+    "require": {
+        "amphp/http-server": "^3.4",
+        "amphp/http-client": "^5.3",
+        "azjezz/psl": "^3.3",
+        "php": "^8.2",
+        "monolog/monolog": "^3.9",
+        "amphp/log": "^2.0",
+        "amphp/http-tunnel": "^2.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.86",
+        "phpunit/phpunit": "^11.5",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "php-standard-library/phpstan-extension": "^2.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Devnix\\OpenaiProxy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pablo Largo Mohedano",
+            "email": "devnix.code@gmail.com"
+        }
+    ]
+}
