@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Devnix\OpenaiProxy;
 
-use Amp\Http\HttpStatus;
-use Amp\Http\Server;
 use Amp\Http\Client;
-use function Psl\IO\write_line;
+use Amp\Http\Server;
 
 final class RequestForwarder implements Server\RequestHandler
 {
@@ -15,11 +13,10 @@ final class RequestForwarder implements Server\RequestHandler
         private Client\HttpClient $client,
         private string $openAiApiHost,
         private string $openAiApiKey,
-    )
-    {
+    ) {
     }
 
-    public function handleRequest(Server\Request $request) : Server\Response
+    public function handleRequest(Server\Request $request): Server\Response
     {
         $uri = $this->buildOpenAiUri($request);
         $clientRequest = $this->buildClientRequest($request, $uri);
@@ -28,7 +25,7 @@ final class RequestForwarder implements Server\RequestHandler
 
         // Retransmitir en streaming y sanear cabeceras problemáticas
         $response = new Server\Response(
-            status: $clientResponse->getStatus() ?? HttpStatus::OK,
+            status: $clientResponse->getStatus(),
             headers: $clientResponse->getHeaders(),
             body: $clientResponse->getBody(),
         );
@@ -49,9 +46,10 @@ final class RequestForwarder implements Server\RequestHandler
         $path = $serverRequest->getUri()->getPath();
         $query = $serverRequest->getUri()->getQuery();
         $uri = rtrim($this->openAiApiHost, '/').$path;
-        if ($query !== '') {
-            $uri .= '?' . $query;
+        if ('' !== $query) {
+            $uri .= '?'.$query;
         }
+
         return $uri;
     }
 
@@ -69,13 +67,13 @@ final class RequestForwarder implements Server\RequestHandler
         $clientRequest->removeHeader('transfer-encoding');
         // Evitar respuestas comprimidas que luego desajustan Content-Length
         $clientRequest->removeHeader('accept-encoding');
-        $clientRequest->setHeader('Authorization', 'Bearer ' . $this->openAiApiKey);
+        $clientRequest->setHeader('Authorization', 'Bearer '.$this->openAiApiKey);
 
         // Solo enviar body cuando el método lo admite y de forma reintetable
         $method = strtoupper($serverRequest->getMethod());
-        if (!in_array($method, ['GET', 'HEAD'], true)) {
+        if (!\in_array($method, ['GET', 'HEAD'], true)) {
             $payload = $serverRequest->getBody()->buffer();
-            if ($payload !== '') {
+            if ('' !== $payload) {
                 $clientRequest->setBody($payload);
             }
         }

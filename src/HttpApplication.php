@@ -6,11 +6,7 @@ namespace Devnix\OpenaiProxy;
 
 use Amp;
 use Amp\ByteStream;
-use Amp\Http\HttpStatus;
 use Amp\Http\Server\DefaultErrorHandler;
-use Amp\Http\Server\Request;
-use Amp\Http\Server\RequestHandler;
-use Amp\Http\Server\Response;
 use Amp\Http\Server\SocketHttpServer;
 use Amp\Log\ConsoleFormatter;
 use Amp\Log\StreamHandler;
@@ -23,11 +19,10 @@ final class HttpApplication
         private string $listenAddress,
         private string $openAiApiHost,
         private string $openAiApiKey,
-    )
-    {
+    ) {
     }
 
-    public function run()
+    public function run(): void
     {
         // Note any PSR-3 logger may be used, Monolog is only an example.
         $logHandler = new StreamHandler(ByteStream\getStdout());
@@ -53,6 +48,5 @@ final class HttpApplication
         Amp\trapSignal([SIGINT, SIGTERM]);
 
         $server->stop();
-
     }
 }
